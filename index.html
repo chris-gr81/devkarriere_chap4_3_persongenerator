@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      button {
+        margin-bottom: 1rem;
+      }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .container {
+        background-color: #eeeeee;
+        border: 1px solid black;
+        padding: 1rem;
+      }
+    </style>
+    <script>
+      const lastNames = [
+        "Ackermann",
+        "Bauer",
+        "Ehring",
+        "Grimm",
+        "Schäfer",
+        "Theis",
+        "Meier",
+        "Hauser",
+      ];
+      const firstNames = [
+        "Ralf",
+        "Max",
+        "Thomas",
+        "Sven",
+        "Tina",
+        "Jana",
+        "Lisa",
+        "Mia",
+      ];
+
+      function printPerson() {
+        const wrapper = document.getElementById("wrapper");
+        const newEntry = createNode(createPersonObject());
+        wrapper.appendChild(newEntry);
+      }
+
+      function createPersonObject() {
+        return {
+          Vorname: firstNames[Math.floor(Math.random() * firstNames.length)],
+          Nachname: lastNames[Math.floor(Math.random() * lastNames.length)],
+          Alter: Math.floor(Math.random() * 32) + 18,
+        };
+      }
+
+      function createNode(person) {
+        const container = document.createElement("section");
+        container.classList.add("container");
+        for (let key in person) {
+          const p = document.createElement("p");
+          p.textContent = `${key}: ${person[key]}`;
+          container.appendChild(p);
+        }
+        return container;
+      }
+    </script>
+  </head>
+  <body>
+    <button onclick="printPerson()">ADD</button>
+    <main id="wrapper" class="wrapper"></main>
+  </body>
+</html>
