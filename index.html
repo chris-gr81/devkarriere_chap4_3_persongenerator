@@ -61,7 +61,8 @@
         container.classList.add("container");
         for (let key in person) {
           const p = document.createElement("p");
-          p.textContent = `${key}: ${person[key]}`;
+          const pText = document.createTextNode(`${key}: ${person[key]}`);
+          p.appendChild(pText);
           container.appendChild(p);
         }
         return container;
