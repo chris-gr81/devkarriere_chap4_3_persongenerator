@@ -30,27 +30,27 @@
       ];
 
       function initializeList() {
-        if (localStorage.getItem("studentsList") !== null) {
+        const studentsFromStorage = JSON.parse(
+          localStorage.getItem("studentsList")
+        );
+        if (studentsFromStorage !== null) {
           const wrapper = document.getElementById("wrapper");
-          studentsArray = JSON.parse(localStorage.getItem("studentsList"));
+          studentsArray = studentsFromStorage;
 
-          for (student of studentsArray) {
-            wrapper.appendChild(createNode(student));
-          }
+          renderPage(studentsArray);
         }
       }
 
-      function printPerson() {
-        const wrapper = document.getElementById("wrapper");
+      function addPerson() {
         const randomPerson = createPersonObject();
         const randomPersonNode = createNode(randomPerson);
         saveInArray(randomPerson);
-        wrapper.appendChild(randomPersonNode);
+        saveInLocalStorage(studentsArray);
+        renderPage(studentsArray);
       }
 
       function saveInArray(student) {
-        studentsArray.push(student);
-        saveInLocalStorage(studentsArray);
+        studentsArray.unshift(student);
       }
 
       function saveInLocalStorage(studentsList) {
@@ -59,27 +59,51 @@
 
       function createPersonObject() {
         return {
+          id: Math.random(),
           Vorname: firstNames[Math.floor(Math.random() * firstNames.length)],
           Nachname: lastNames[Math.floor(Math.random() * lastNames.length)],
           Alter: Math.floor(Math.random() * 32) + 18,
         };
       }
 
+      function deleteStudent(id) {
+        studentsArray = studentsArray.filter((element) => {
+          return !(element.id === id);
+        });
+        saveInLocalStorage(studentsArray);
+        renderPage(studentsArray);
+      }
+
+      function renderPage(studentsArray) {
+        const wrapper = document.getElementById("wrapper");
+        wrapper.innerHTML = "";
+        for (let student of studentsArray) {
+          const personNode = createNode(student);
+          wrapper.appendChild(personNode);
+        }
+      }
       function createNode(person) {
         const container = document.createElement("section");
         container.classList.add("container");
         for (let key in person) {
+          if (key === "id") continue;
           const p = document.createElement("p");
           const pText = document.createTextNode(`${key}: ${person[key]}`);
           p.appendChild(pText);
           container.appendChild(p);
         }
+
+        const deleteBtn = document.createElement("button");
+        const deleteButtonText = document.createTextNode("Löschen");
+        deleteBtn.setAttribute("onclick", `deleteStudent(${person.id})`);
+        deleteBtn.appendChild(deleteButtonText);
+        container.appendChild(deleteBtn);
         return container;
       }
     </script>
   </head>
   <body>
-    <button onclick="printPerson()">ADD</button>
+    <button onclick="addPerson()">ADD</button>
     <main id="wrapper" class="wrapper"></main>
   </body>
 </html>
